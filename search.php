@@ -1,7 +1,7 @@
 <?php
 require_once('admin/bddConnect.php');
 $fetch = '';
-$err = '<h4 class="text-primary mt-3">Aucun Chauffeur disponible pour le moment !</h4>';
+$err = '<h4 class="text-primary mt-3">Aucun Chauffeur n\'est disponible dans votre langue pour le moment !</h4>';
 if(isset($_POST["input"])) {
 	$search = $_POST["input"];
   $nbrDriver = $bdd->prepare('SELECT employee.*,service.description FROM service,employee WHERE service.job = "chauffeur" AND service.idEmployee = employee.id AND employee.country like ?"%"');
@@ -21,7 +21,7 @@ if(count($result) > 0) {
         <img class="card-img-top" src="assets/team/'.$row['picProfil'].'" alt="photo chauffeur">
         <div class="card-body">
           <h3 class="card-text">'.$row['firstName']." ".$row['secondName'].'</h3>
-          <p class="card-text"  maxlength="7">Description : '.$row['description'].'</p>
+          <p class="card-text">Description : '.$row['description'].'</p>
           <p class="card-text">Langue(s) parlé : '.$row['country'].'</p>
           <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">

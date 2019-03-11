@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9066c123-4655-45d0-823f-8ab55cbff409" name="projet_annuel" url="http://localhost/Projet_Annuel_2i1">
+        <fileTransfer port="0" mountedRoot="D:\wamp\www\Projet_Annuel_2i1" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
