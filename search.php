@@ -4,11 +4,11 @@ $fetch = '';
 $err = '<h4 class="text-primary mt-3">Aucun Chauffeur n\'est disponible dans votre langue pour le moment !</h4>';
 if(isset($_POST["input"])) {
 	$search = $_POST["input"];
-  $nbrDriver = $bdd->prepare('SELECT employee.*,service.description FROM service,employee WHERE service.job = "chauffeur" AND service.idEmployee = employee.id AND employee.country like ?"%"');
+  $nbrDriver = $bdd->prepare('SELECT employee.*,service.description FROM service,employee WHERE service.job = "chauffeur" AND service.available = "1" AND service.idEmployee = employee.id AND employee.country like ?"%"');
   $nbrDriver->execute(array($search));
   $result = $nbrDriver->fetchAll(PDO::FETCH_ASSOC);
 } else {
-  $nbrDriver = $bdd->prepare('SELECT employee.*,service.description FROM service,employee WHERE service.job = "chauffeur" AND service.idEmployee = employee.id ORDER BY employee.id');
+  $nbrDriver = $bdd->prepare('SELECT employee.*,service.description FROM service,employee WHERE service.job = "chauffeur" AND service.available = "1" AND service.idEmployee = employee.id ORDER BY employee.id');
   $nbrDriver->execute();
   $result = $nbrDriver->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -22,7 +22,7 @@ if(count($result) > 0) {
         <div class="card-body">
           <h3 class="card-text">'.$row['firstName']." ".$row['secondName'].'</h3>
           <p class="card-text">Description : '.$row['description'].'</p>
-          <p class="card-text">Langue(s) parlé : '.$row['country'].'</p>
+          <p class="card-text">Langue(s) parlé : '.$row['language'].'</p>
           <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
             <form action="booking.php" method="post">

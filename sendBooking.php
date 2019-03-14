@@ -19,7 +19,7 @@ $mac2 = !empty($_POST['mac2']) ? $_POST['mac2'] : 0;
 $laptop = !empty($_POST['laptop']) ? $_POST['laptop'] : 0;
 $android = !empty($_POST['android']) ? $_POST['android'] : 0;
 $ipad = !empty($_POST['ipad']) ? $_POST['ipad'] : 0;
-$audio = !empty($_POST['audio']) ? $_POST['audio'] : 0;
+$audio = !empty($_POST['audio']) ? secure(['audio']) : 0;
 $hotel = !empty($_POST['hotel']) ? $_POST['hotel'] : 0;
 $billet = !empty($_POST['billet']) ? $_POST['billet'] : 0;
 $restau = !empty($_POST['restau']) ? $_POST['restau'] : 0;
@@ -97,52 +97,79 @@ $available = $check->fetch(PDO::FETCH_ASSOC);
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4 order-md-2">
-                            <h4 class="d-flex justify-content-between mb-3"> <span class="text-muted"><b>Service demandé</b></span> <span class="badge badge-pill badge-primary"><?php echo $nbrService ?></span> </h4>
+                            <form>
+                            <h4 class="d-flex justify-content-between mb-3"> <span class="text-primary"><b>Service demandé</b></span> <span class="badge badge-pill badge-primary"><?php echo $nbrService ?></span> </h4>
                             <ul class="list-group">
                                 <?php product($arrayService); ?>
                                 <li class="list-group-item d-flex justify-content-between">
                                     <div>
-                                        <h6 class="my-0 text-primary"><b>Prix de la course</b></h6> <small class="text-muted">pour <?php echo $km; ?> km</small>
-                                    </div> <span class="text-muted"><?php echo resKm($km);?>€</span>
+                                        <h6 class="my-0"><b>Prix de la course</b></h6> <small class="text-muted">pour <?php echo $km; ?> km</small>
+                                    </div> <span class="text-success"><?php echo resKm($km);?>€</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span>Total (EUR)</span>
                                     <b><?php echo $sumPay."€"; ?></b>
                                 </li>
                             </ul>
-                            <form class="card p-2 my-4">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Promo code">
+                                <div class="input-group mt-2">
+                                    <input type="text" class="form-control" placeholder="Code promo">
                                         <div class="input-group-append">
-                                            <button type="submit" class="btn btn-secondary">Redeem</button>
+                                            <button type="submit" class="btn btn-secondary"><i class="fas fa-check"></i></button>
                                         </div>
                                 </div>
-                            </form>
                         </div>
                         <div class="col-md-8 order-md-1">
+
                             <h4 class="mb-3"><b>Payment</b></h4>
                             <div class="row">
-                                <div class="col-md-6 mb-3"> <label for="cc-name">Name on card</label>
-                                    <input type="text" class="form-control" id="cc-name" placeholder="" required=""> <small class="text-muted">Full name as displayed on card</small>
-                                        <div class="invalid-feedback"> Name on card is required </div>
+                                <div class="col-md-6 mb-3"> <label>Titulaire de la carte</label>
+                                    <input id="titulaire" class="form-control" type="text" onblur="verifyTitulaire()"> <small class="text-muted">Nom complet afficher sur la carte</small>
                                 </div>
-                                <div class="col-md-6 mb-3"> <label for="cc-number">Credit card number</label>
-                                    <input type="text" class="form-control" id="cc-number" placeholder="" required="">
-                                        <div class="invalid-feedback"> Credit card number is required </div>
+                                <div class="col-md-6 mb-3"> <label>Numéro de carte</label>
+                                    <input id="number" class="form-control" type="text" maxlength="16" onblur="verifyNumberCard()">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-3 mb-3"> <label for="cc-expiration">Expiration</label>
-                                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
-                                        <div class="invalid-feedback"> Expiration date required </div>
-                                </div>
-                                <div class="col-md-3 mb-3"> <label for="cc-expiration">CVV</label>
-                                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
-                                        <div class="invalid-feedback"> Security code required </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3" > <label>Date d'expiration </label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select id="month" class="form-control" onclick="verifyDateCard()" onchange="verifyDateCard()">
+                                                <?php
+                                                for($i = 1; $i <= 12; $i++) {
+                                                    $nb = date("m", strtotime(date("Y")."-".$i."-01"));
+                                                    echo '<option value="'.$nb.'"';
+                                                    if ($nb == date("m")) echo "selected";
+                                                    echo '>'.$nb.'</option>';
+                                                }
+                                                ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 p-0">
+                                                <select id="year" class="form-control" onclick="verifyDateCard()" onchange="verifyDateCard()">
+                                                <?php
+                                                $year = date("Y");
+                                                for($i = $year; $i <= $year + 10; $i++) {
+                                                    echo '<option value="'.$i.'">'.$i.'</option>';
+                                                }
+                                                ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="col-md-3 mb-3"> <label>CVV</label>
+                                    <input id="cryptogramme" class="form-control" type="text" max="999" maxlength="3" onblur="verifyCrypto()">
                                 </div>
                             </div>
                             <hr class="mb-4">
-                                <button class="btn btn-primary btn-lg btn-block" type="submit">Payez</button>
+                                <input id="idUser" type="hidden" value="<?php echo $_SESSION['id']; ?>">
+                                <input id="idEmployee" type="hidden" value="<?php echo $idEmployee; ?>">
+                                <input id="startPoint" type="hidden" value="<?php echo $start; ?>">
+                                <input id="endPoint" type="hidden" value="<?php echo $end; ?>">
+                                <input id="nbrKm" type="hidden" value="<?php echo $km; ?>">
+                                <input id="services" type="hidden" value="<?php echo $nbrService; ?>">
+                                <input id="price" type="hidden" value="<?php echo $sumPay; ?>">
+                                <button id="buttonIpay" class="btn btn-primary btn-lg btn-block" type="submit" onclick="validate()" disabled>Payez</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -161,7 +188,14 @@ $available = $check->fetch(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </footer>
-            <script src="assets/js/validation.js"></script>
+            <script type="text/javascript" src="js/check.js"></script>
+            <script type="text/javascript" src="js/jquery.js"></script>
+            <script type="text/javascript" src="js/function.js"></script>
+            <script type="text/javascript">
+                document.onload = function() {
+                validate();
+            };
+            </script>
         </body>
     </html>
-</html> <?php } ?>
+<?php } ?>

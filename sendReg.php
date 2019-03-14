@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('admin/bddConnect.php');
+require_once('php/function.php');
 $firstName = secure($_POST['firstName']);
 $secondName = secure($_POST['secondName']);
 $username = secure($_POST['username']);
@@ -12,12 +13,6 @@ $dptCode = secure($_POST['dptCode']);
 $password = secure($_POST['password']);
 $verifPassword = secure($_POST['verifPassword']);
 
-function secure($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
 // Après avoir initialiser toutes les variables (faire un contrôle d'erreur en cas d'oubli)
 // On vérifie l'existence d'une adresse mail qui serai égale à celle entrée, pareillement pour l'username
 
@@ -92,7 +87,6 @@ if($mailExists['nbrEmail'] == 0) // Si l'email n'est pas utilisé
 
         </html>
         <?php
-        header( "Refresh:5; url=index.php" );
       }
     } else {   // A partir d'ici on gère les cas d'erreur : Si l'username est déjà utilisé ?>
     <!DOCTYPE html>
@@ -124,7 +118,6 @@ if($mailExists['nbrEmail'] == 0) // Si l'email n'est pas utilisé
     </body>
     </html>
       <?php
-     header( "Refresh:5; url=register.php" );
     }
   } else { // Si les mots de passe ne correspondent pas ?>
     <!DOCTYPE html>
@@ -156,7 +149,6 @@ if($mailExists['nbrEmail'] == 0) // Si l'email n'est pas utilisé
     </body>
     </html>
     <?php
-   header( "Refresh:5; url=register.php" );
   }
 } else { // Si l'adresse email existe déjà ?>
 <!DOCTYPE html>
@@ -189,6 +181,5 @@ if($mailExists['nbrEmail'] == 0) // Si l'email n'est pas utilisé
 </body>
 </html>
   <?php
- header( "Refresh:10; url=connection.php" );
 }
 ?>

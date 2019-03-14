@@ -48,7 +48,7 @@
                <label class="sr-only">Mot de passe</label>
                <input placeholder="Mot de passe" class="form-control" type="password" name="password" id="password" required>
                <small class="form-text text-muted text-right">
-                 <a href="#"> Mot de passe oublié?</a>
+                 <a href="#"> Mot de passe oublié ?</a>
                </small>
              </div>
               <button type="submit" class="btn btn-primary" onclick="connectUser()">Se connecter</button>
@@ -72,6 +72,11 @@
      </div>
    </footer>
    <script src="js/function.js"></script>
+   <script type="text/javascript">
+       document.onload = function() {
+       connectUser();
+   };
+   </script>
  </body>
 
  </html>

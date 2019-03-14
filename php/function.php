@@ -55,7 +55,7 @@ function product($data){
                 $fetch .='<li class="list-group-item d-flex justify-content-between">
                         <div>
                              <h6 class="my-0"><b>'.detail($counter).'</b></h6> <small class="text-muted">pour '.$row.' personne</small>
-                        </div> <span class="text-muted">'.priceDetail($row, $counter).'€</span>
+                        </div> <span class="text-success">+'.priceDetail($row, $counter).'€</span>
                       </li>';
             }
             $counter++;
@@ -156,6 +156,22 @@ function priceDetail($data, $row){
             return $result;
         default:
             return "0";
+    }
+}
+
+function description($nbrKm, $services) {
+    $string = "Payement effectuer pour une course de ".$nbrKm." Km";
+    switch ($services) {
+        case 0:
+            return $string;
+            break;
+        case 1:
+            $string .= ", et ".$services." service.";
+            return $string;
+            break;
+        default:
+            $string .= ", et ".$services." services.";
+            return $string;
     }
 }
 ?>
